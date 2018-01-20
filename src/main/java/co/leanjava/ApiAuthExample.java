@@ -5,6 +5,7 @@ import io.dropwizard.Application;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.h2.tools.RunScript;
 import org.skife.jdbi.v2.DBI;
 
@@ -35,6 +36,7 @@ public class ApiAuthExample extends Application<ApiAuthExampleConfiguration> {
         this.initializeDB();
         final DBIFactory dbiFactory = new DBIFactory();
         final DBI dbi = dbiFactory.build(environment, configuration.getDatabase(), "authexample");
+        environment.getApplicationContext().setSessionHandler(new SessionHandler());
         environment.jersey().register(new LoginResource());
     }
 
