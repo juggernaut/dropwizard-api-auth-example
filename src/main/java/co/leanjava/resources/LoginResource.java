@@ -24,7 +24,7 @@ public class LoginResource {
             @NotEmpty @FormParam("password") String password) {
         if (password.equals("SECRET")) {
             final String sessionId = request.getSession(true).getId();
-            NewCookie cookie = new NewCookie("SID", sessionId, null, null, null, 30, true, true);
+            NewCookie cookie = new NewCookie("JSESSIONID", sessionId, null, null, null, 5000, true, true);
             return Response.noContent().cookie(cookie).build();
         }
         return Response.status(Response.Status.UNAUTHORIZED).build();

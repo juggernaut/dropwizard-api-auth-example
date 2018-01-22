@@ -1,5 +1,7 @@
 package co.leanjava;
 
+import co.leanjava.filters.SessionAuthFilter;
+import co.leanjava.resources.GreetingResource;
 import co.leanjava.resources.LoginResource;
 import io.dropwizard.Application;
 import io.dropwizard.jdbi.DBIFactory;
@@ -37,7 +39,11 @@ public class ApiAuthExample extends Application<ApiAuthExampleConfiguration> {
         final DBIFactory dbiFactory = new DBIFactory();
         final DBI dbi = dbiFactory.build(environment, configuration.getDatabase(), "authexample");
         environment.getApplicationContext().setSessionHandler(new SessionHandler());
+
+        environment.jersey().register(new SessionAuthFilter());
+
         environment.jersey().register(new LoginResource());
+        environment.jersey().register(new GreetingResource());
     }
 
     private void initializeDB() {
