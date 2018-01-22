@@ -1,6 +1,8 @@
 package co.leanjava.resources;
 
+import co.leanjava.filters.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dropwizard.auth.Auth;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -16,7 +18,7 @@ import javax.ws.rs.core.Response;
 public class GreetingResource {
 
     @GET
-    public Response getGreeting() {
+    public Response getGreeting(@Auth User user) {
         final Greeting greeting = new Greeting("Hello there!");
         return Response.ok(greeting).build();
     }

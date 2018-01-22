@@ -1,13 +1,17 @@
 package co.leanjava;
 
-import co.leanjava.filters.SessionAuthFilter;
+import co.leanjava.db.AuthTokenDao;
+import co.leanjava.filters.TokenAuthFilter;
+import co.leanjava.filters.TokenAuthenticator;
+import co.leanjava.filters.User;
 import co.leanjava.resources.GreetingResource;
 import co.leanjava.resources.LoginResource;
 import io.dropwizard.Application;
+import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import org.eclipse.jetty.server.session.SessionHandler;
 import org.h2.tools.RunScript;
 import org.skife.jdbi.v2.DBI;
 
@@ -38,11 +42,16 @@ public class ApiAuthExample extends Application<ApiAuthExampleConfiguration> {
         this.initializeDB();
         final DBIFactory dbiFactory = new DBIFactory();
         final DBI dbi = dbiFactory.build(environment, configuration.getDatabase(), "authexample");
-        environment.getApplicationContext().setSessionHandler(new SessionHandler());
 
-        environment.jersey().register(new SessionAuthFilter());
+        final AuthTokenDao authTokenDao = dbi.onDemand(AuthTokenDao.class);
+        final TokenAuthenticator authenticator = new TokenAuthenticator(authTokenDao);
+        environment.jersey().register(new AuthDynamicFeature(
+                new TokenAuthFilter.TokenAuthFilterBuilder()
+                        .setAuthenticator(authenticator)
+                        .buildAuthFilter()));
+        environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
 
-        environment.jersey().register(new LoginResource());
+        environment.jersey().register(new LoginResource(authTokenDao));
         environment.jersey().register(new GreetingResource());
     }
 
