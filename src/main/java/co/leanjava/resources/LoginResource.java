@@ -32,6 +32,8 @@ public class LoginResource {
     public Response login(
             @NotEmpty @FormParam("username") String username,
             @NotEmpty @FormParam("password") String password) {
+        // NOTE: secure password validation is outside the scope of this example. Please refer to
+        // https://codahale.com/how-to-safely-store-a-password/ for how to do this.
         if (username.equals("johndoe") && password.equals("SECRET")) {
             return this.generateAndStoreToken(JOHN_DOE_USER_ID);
         }
@@ -39,14 +41,14 @@ public class LoginResource {
     }
 
     private Response generateAndStoreToken(final int userId) {
-        authTokenDao.deleteTokenForUser(userId);
-        TokenCredentials newToken = TokenCredentials.generateRandomCredentials();
-        int inserted = authTokenDao.insertToken(userId, newToken, EXPIRE_AFTER_SECONDS);
+        this.authTokenDao.deleteTokenForUser(userId);
+        final TokenCredentials newToken = TokenCredentials.generateRandomCredentials();
+        int inserted = this.authTokenDao.insertToken(userId, newToken, EXPIRE_AFTER_SECONDS);
         if (inserted == 0) {
             throw new WebApplicationException("Sorry, could not login due to server error");
         }
-        NewCookie sessionCookie = new NewCookie(TokenAuthFilter.AUTH_TOKEN_COOKIE_NAME, newToken.getAuthToken(), null, null, null, 5000, true, true);
-        NewCookie csrfCookie = new NewCookie(TokenAuthFilter.CSRF_TOKEN_COOKIE_NAME, newToken.getCsrfToken(), null, null, null, EXPIRE_AFTER_SECONDS, true, false);
+        final NewCookie sessionCookie = new NewCookie(TokenAuthFilter.AUTH_TOKEN_COOKIE_NAME, newToken.getAuthToken(), null, null, null, 5000, true, true);
+        final NewCookie csrfCookie = new NewCookie(TokenAuthFilter.CSRF_TOKEN_COOKIE_NAME, newToken.getCsrfToken(), null, null, null, EXPIRE_AFTER_SECONDS, true, false);
         return Response.noContent().cookie(sessionCookie, csrfCookie).build();
     }
 }
