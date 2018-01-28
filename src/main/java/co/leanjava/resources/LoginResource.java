@@ -1,8 +1,8 @@
 package co.leanjava.resources;
 
 import co.leanjava.db.AuthTokenDao;
-import co.leanjava.filters.TokenAuthFilter;
-import co.leanjava.filters.TokenCredentials;
+import co.leanjava.security.TokenAuthFilter;
+import co.leanjava.security.TokenCredentials;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.ws.rs.*;
@@ -47,7 +47,7 @@ public class LoginResource {
         if (inserted == 0) {
             throw new WebApplicationException("Sorry, could not login due to server error");
         }
-        final NewCookie sessionCookie = new NewCookie(TokenAuthFilter.AUTH_TOKEN_COOKIE_NAME, newToken.getAuthToken(), null, null, null, 5000, true, true);
+        final NewCookie sessionCookie = new NewCookie(TokenAuthFilter.AUTH_TOKEN_COOKIE_NAME, newToken.getAuthToken(), null, null, null, EXPIRE_AFTER_SECONDS, true, true);
         final NewCookie csrfCookie = new NewCookie(TokenAuthFilter.CSRF_TOKEN_COOKIE_NAME, newToken.getCsrfToken(), null, null, null, EXPIRE_AFTER_SECONDS, true, false);
         return Response.noContent().cookie(sessionCookie, csrfCookie).build();
     }

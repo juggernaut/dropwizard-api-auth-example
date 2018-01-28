@@ -1,9 +1,9 @@
 package co.leanjava;
 
 import co.leanjava.db.AuthTokenDao;
-import co.leanjava.filters.TokenAuthFilter;
-import co.leanjava.filters.TokenAuthenticator;
-import co.leanjava.filters.User;
+import co.leanjava.security.TokenAuthFilter;
+import co.leanjava.security.TokenAuthenticator;
+import co.leanjava.security.User;
 import co.leanjava.resources.GreetingResource;
 import co.leanjava.resources.LoginResource;
 import io.dropwizard.Application;

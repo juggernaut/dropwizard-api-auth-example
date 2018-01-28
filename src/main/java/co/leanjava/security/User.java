@@ -1,4 +1,4 @@
-package co.leanjava.filters;
+package co.leanjava.security;
 
 import java.security.Principal;
 

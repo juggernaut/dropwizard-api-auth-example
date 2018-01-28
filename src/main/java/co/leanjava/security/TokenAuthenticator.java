@@ -1,4 +1,4 @@
-package co.leanjava.filters;
+package co.leanjava.security;
 
 import co.leanjava.db.AuthTokenDao;
 import io.dropwizard.auth.AuthenticationException;

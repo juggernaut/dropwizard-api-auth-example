@@ -1,4 +1,4 @@
-package co.leanjava.filters;
+package co.leanjava.security;
 
 import com.google.common.base.Strings;
 import io.dropwizard.auth.AuthFilter;
