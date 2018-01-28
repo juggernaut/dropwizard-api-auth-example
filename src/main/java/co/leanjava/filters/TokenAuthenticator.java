@@ -19,6 +19,6 @@ public class TokenAuthenticator implements Authenticator<TokenCredentials, User>
 
     @Override
     public Optional<User> authenticate(TokenCredentials tokenCredentials) throws AuthenticationException {
-        return Optional.ofNullable(this.dao.getUserForToken(tokenCredentials.getToken())).map(User::new);
+        return Optional.ofNullable(this.dao.getUserForToken(tokenCredentials.getAuthToken())).map(User::new);
     }
 }

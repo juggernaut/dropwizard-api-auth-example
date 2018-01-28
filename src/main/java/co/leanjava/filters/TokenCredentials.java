@@ -1,6 +1,7 @@
 package co.leanjava.filters;
 
-import javax.xml.bind.DatatypeConverter;
+import com.google.common.io.BaseEncoding;
+
 import java.security.SecureRandom;
 
 /**
@@ -11,19 +12,29 @@ public class TokenCredentials {
     private static final SecureRandom PRNG = new SecureRandom();
     private static final int TOKEN_SIZE = 20;
 
-    private final String token;
+    private final String authToken;
+    private final String csrfToken;
 
-    public TokenCredentials(String token) {
-        this.token = token;
+    public TokenCredentials(String authToken, String csrfToken) {
+        this.authToken = authToken;
+        this.csrfToken = csrfToken;
     }
 
-    public String getToken() {
-        return token;
+    public String getAuthToken() {
+        return authToken;
     }
 
-    public static TokenCredentials generateRandomToken() {
+    public String getCsrfToken() {
+        return csrfToken;
+    }
+
+    public static TokenCredentials generateRandomCredentials() {
+        return new TokenCredentials(generateRandomToken(), generateRandomToken());
+    }
+
+    private static String generateRandomToken() {
         final byte[] tokenBytes = new byte[TOKEN_SIZE];
         PRNG.nextBytes(tokenBytes);
-        return new TokenCredentials(DatatypeConverter.printHexBinary(tokenBytes));
+        return BaseEncoding.base16().lowerCase().encode(tokenBytes);
     }
 }
