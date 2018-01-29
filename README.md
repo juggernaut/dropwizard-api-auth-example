@@ -2,6 +2,8 @@
 
 ><b>DISCLAIMER</b>: I'm not a security expert, and this code is not reviewed by a security expert. For production, you should use a hardened library like Spring-Security.
 
+[Full blog post](http://leanjava.co/2018/01/29/exploring-rest-api-authentication-mechanisms/) explaining rationale.
+
 How to start the dropwizard-api-auth-example application
 ---
 
